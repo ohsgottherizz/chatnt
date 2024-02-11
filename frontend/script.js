@@ -1,5 +1,18 @@
 let userMessages = [];
 let assistantMessages = [];
+let myDateTime = '';
+
+function start() {
+    const date = document.getElementById('date').value;
+    const hour = document.getElementById('hour').value;
+    if(date === '') {
+        alert('생년월일을 입력해 주세요.');
+        return;
+    } 
+    myDateTime = date + hour;
+    document.getElementById("intro").style.display = "none";
+    document.getElementById("chat").style.display = "block";
+}
 
 async function sendMessage() {
     const messageInput = document.getElementById('messageInput');
@@ -21,6 +34,7 @@ async function sendMessage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
+                myDateTime: myDateTime,
                 userMessages: userMessages,
                 assistantMessages: assistantMessages,
              })
@@ -31,7 +45,9 @@ async function sendMessage() {
         }
 
         const data = await response.json();
-        console.log('Response:', data.assistant);
+
+        assistantMessages.push(data.assistant);
+        console.log('Response:', data);
 
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot-bubble';
